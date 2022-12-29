@@ -1,0 +1,132 @@
+<!-- create basic html page -->
+<!DOCTYPE html>
+<html>
+<head>
+<title>한글 숫자 읽기</title>
+<!-- create bootstrap link -->  
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- create jquery link -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- create bootstrap javascript link -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<!-- create a container -->
+<div class="container">
+<!-- create a row -->
+<div class="row">
+<!-- create a column -->
+<div class="col-md-12">
+<!-- create a heading -->
+<h1>한글 숫자 읽기</h1>
+<!-- create a paragraph -->
+<p>아래 숫자 범위를 선택하세요.</p>
+
+<!-- crate a radio button -->
+<div class="radio">
+<label><input type="radio" name="optradio" checked value="일만"> < 10,000 </label>
+</div>
+<div class="radio">
+<label><input type="radio" name="optradio" value="십만"> < 100,000</label>
+</div>
+<div class="radio">
+<label><input type="radio" name="optradio" value="백만"> < 1,000,000</label>
+</div>
+
+<script>
+    // create a variable to store the random number generated
+    var initValue = 10000;
+
+    //get the value of the radio button when it is clicked
+    $(document).ready(function(){
+        $('input[type="radio"]').click(function(){
+            //var inputValue = $(this).attr("value");
+            var inputValue = $(this).val();
+            // create select case to get the value of the radio button  clicked
+            switch (inputValue) {
+                case "일만":
+                    initValue = 10000;
+                    break;
+                case "십만":
+                    initValue = 100000;
+                    break;
+                case "백만":
+                    initValue = 1000000;
+                    break;
+                default:
+                    initValue = 10000;
+            }
+        });
+    });
+
+    // create regex to convert number to korean number
+    $(document).ready(function(){
+        $("#btn").click(function(){
+
+            console.log(initValue);
+            var a = Math.floor((Math.random() * initValue ) + 1);
+
+            // convert string with comma to number
+            var b = a.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            // display the random number
+            $("#randomNum").html("<p>Random number is " + b + "</p>");
+            $("#convertedRandomNum").html("<p>Random Korean number is " + koreanNumberString(a) + "</p>");
+        });
+    });
+
+    // create korean numberstring() function
+
+    function koreanNumberString(n) {
+        var hanA = new Array("", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구");
+        var hanB = new Array("", "십", "백", "천");
+        var hanC = new Array("", "만", "억", "조", "경");
+
+        var result = "";
+        var unit = 0;
+
+        while (n > 0) {
+            var str = "";
+            var hanValue = n % 10000;
+
+            if (hanValue > 0) {
+                var count = 0;
+
+                while (hanValue > 0) {
+                    var one = hanValue % 10;
+
+                    if (one > 0) {
+                        str = hanA[one] + hanB[count] + str;
+                    }
+
+                    hanValue = Math.floor(hanValue / 10);
+                    count++;
+                }
+
+                str += hanC[unit];
+                result = str + result;
+            }
+
+            n = Math.floor(n / 10000);
+            unit++;
+        }
+
+        result = result.replace(/일십/g, "십");
+        return result;
+    }
+    </script>
+    
+    <!-- create a button -->
+    <button id="btn">생성하기</button>
+    <!-- create a paragraph to display the random number -->
+    <p id="randomNum"></p>
+    <p id="convertedRandomNum"></p>
+
+</div>
+</div>
+</div>
+
+<!-- create a random number generator -->
+</body>
+</html>
